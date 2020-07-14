@@ -1,0 +1,4 @@
+{
+  "Mongo": "mongodb+srv://gaurav:gau9811@cluster0-kfopd.azure.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "Secret"
+}
