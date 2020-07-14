@@ -1,7 +1,7 @@
 {
   "name": "Olx",
   "version": "1.0.0",
-  "description": "this is cloth website",
+  "description": "this is olx  website",
   "main": "server",
   "scripts": {
     "start": "node server",
