@@ -6,7 +6,7 @@ router.get("/facebook", passport.authenticate("facebook", {scope: ["email"]}))
 
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", {successRedirect: "/bye"})
+  passport.authenticate("facebook", {successRedirect: "/showcase"})
 )
 
 router.get("/logout", (req, res) => {
