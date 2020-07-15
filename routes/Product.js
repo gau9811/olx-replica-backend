@@ -127,7 +127,7 @@ router.put(
 // @desc     Get the user productby user id
 // @access   Private
 
-router.get("/user/:car_id", auth, async (req, res) => {
+router.get("/user/:car_id", async (req, res) => {
   let product = await Product.find({
     user: req.user.id,
     _id: req.params.car_id,
@@ -143,7 +143,7 @@ router.get("/user/:car_id", auth, async (req, res) => {
 router.post(
   "/carDescription",
   upload,
-  auth,
+ 
 
   [
     check("company").not().isEmpty(),
@@ -229,7 +229,7 @@ router.post(
 router.put(
   "/carSale/update/:CarId",
   upload,
-  auth,
+  
   [
     check("company").not().isEmpty(),
     check("name").not().isEmpty(),
@@ -316,7 +316,7 @@ router.put(
 // @desc     delete the user productby user id
 // @access   Private
 
-router.delete("/productdelete/:id", auth, async (req, res) => {
+router.delete("/productdelete/:id", async (req, res) => {
   try {
     let product = await Product.findOne({
       user: req.user.id,
@@ -357,7 +357,7 @@ router.delete("/productdelete/:id", auth, async (req, res) => {
 // @desc     delete the user
 // @access   Private
 
-router.delete("/userdelete", auth, async (req, res) => {
+router.delete("/userdelete", async (req, res) => {
   try {
     let product = await Product.find({
       user: req.user.id,
