@@ -1,6 +1,5 @@
 const express = require("express")
 const router = express.Router()
-const auth = require("../middleware/auth")
 const AWS = require("aws-sdk")
 require("dotenv").config()
 const multer = require("multer")
@@ -9,14 +8,14 @@ const upload = multer({Storage: Storage}).array("photos", 15)
 const Product = require("../model/Product")
 const User = require("../model/user")
 const gravatar = require("gravatar")
-
+const {ensureAuth, ensureGuest} = require("../middleware/passportAuth")
 const {check, validationResult} = require("express-validator")
 
 // @route    GET api/products
 // @desc     Get all products
 // @access   Public
 
-router.get("/showCaseCar", async (req, res) => {
+router.get("/showCaseCar", ensureGuest, async (req, res) => {
   try {
     let product = await Product.find()
     res.json({showcase: product})
@@ -28,7 +27,7 @@ router.get("/showCaseCar", async (req, res) => {
 // @route    GET api/products/search
 // @desc     find a product by name
 // @access   Public
-router.get("/search", async (req, res) => {
+router.get("/search", ensureGuest, async (req, res) => {
   const name = req.query.name.toLowerCase()
   const product = await Product.find()
   const productName = product.map((user) => {
@@ -55,7 +54,7 @@ router.get("/search", async (req, res) => {
 // @desc     Get all  user car by userid
 // @access   Private
 
-router.get("/MyCar", async (req, res) => {
+router.get("/MyCar", ensureAuth, async (req, res) => {
   let product = await Product.find({user: req.user.id})
 
   try {
@@ -70,7 +69,7 @@ router.get("/MyCar", async (req, res) => {
 // @route    GET api/products/Myprofile
 // @desc     Get a user by JWTtoken
 // @access   Private
-router.get("/MyProfile", async (req, res) => {
+router.get("/MyProfile", ensureAuth, async (req, res) => {
   let profile = await User.find({_id: req.user.id})
   try {
     res.json({profile: profile})
@@ -93,7 +92,7 @@ router.put(
     check("address").not().isEmpty(),
     check("phonenumber").not().isEmpty(),
   ],
-  auth,
+  ensureAuth,
   async (req, res) => {
     try {
       const avatar = gravatar.url(email, {
@@ -127,7 +126,7 @@ router.put(
 // @desc     Get the user productby user id
 // @access   Private
 
-router.get("/user/:car_id", async (req, res) => {
+router.get("/user/:car_id", ensureAuth, async (req, res) => {
   let product = await Product.find({
     user: req.user.id,
     _id: req.params.car_id,
@@ -143,7 +142,7 @@ router.get("/user/:car_id", async (req, res) => {
 router.post(
   "/carDescription",
   upload,
- 
+  ensureAuth,
 
   [
     check("company").not().isEmpty(),
@@ -229,7 +228,7 @@ router.post(
 router.put(
   "/carSale/update/:CarId",
   upload,
-  
+  ensureAuth,
   [
     check("company").not().isEmpty(),
     check("name").not().isEmpty(),
@@ -316,7 +315,7 @@ router.put(
 // @desc     delete the user productby user id
 // @access   Private
 
-router.delete("/productdelete/:id", async (req, res) => {
+router.delete("/productdelete/:id", ensureAuth, async (req, res) => {
   try {
     let product = await Product.findOne({
       user: req.user.id,
@@ -357,7 +356,7 @@ router.delete("/productdelete/:id", async (req, res) => {
 // @desc     delete the user
 // @access   Private
 
-router.delete("/userdelete", async (req, res) => {
+router.delete("/userdelete", ensureAuth, async (req, res) => {
   try {
     let product = await Product.find({
       user: req.user.id,
@@ -399,7 +398,7 @@ router.delete("/userdelete", async (req, res) => {
 // @desc     post the chat between two users
 // @access   Public
 
-router.get("/chat/:user1/:user2", async (req, res) => {
+router.get("/chat/:user1/:user2", ensureGuest, async (req, res) => {
   const product = await Product.findOne({
     user: req.params.user1,
   }).populate("user", ["username", "email"])
