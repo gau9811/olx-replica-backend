@@ -6,12 +6,12 @@ router.get("/facebook", passport.authenticate("facebook", {scope: ["email"]}))
 
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", {successRedirect: "/showcase"})
+  passport.authenticate("facebook", {successRedirect: "/showCaseCar"})
 )
 
 router.get("/logout", (req, res) => {
   req.logout()
-  res.redirect("/")
+  res.redirect("/login")
 })
 
 module.exports = router
