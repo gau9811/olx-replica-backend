@@ -11,13 +11,13 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {failureRedirect: "/login"}),
   (req, res) => {
-    res.redirect("/showcase")
+    res.redirect("/showCaseCar")
   }
 )
 
 router.get("/logout", (req, res) => {
   req.logout()
-  res.redirect("/")
+  res.redirect("/login")
 })
 
 module.exports = router
